@@ -220,6 +220,10 @@ impl<'a, T> Iterator for TempFdArrayIterator<'a, T> {
             self.index += 1;
             Some(&self.buffer[self.index - 1])
         } else {
+            if self.file_vec.is_empty() {
+                return None;
+            }
+
             let length = self.file_vec.len() / std::mem::size_of::<T>();
             let ts =
                 unsafe { std::slice::from_raw_parts(self.file_vec.as_ptr() as *const T, length) };
