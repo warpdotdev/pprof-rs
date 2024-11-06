@@ -71,6 +71,10 @@ fn open_pipe() -> nix::Result<()> {
 pub fn validate(addr: *const libc::c_void) -> bool {
     const CHECK_LENGTH: usize = 2 * size_of::<*const libc::c_void>() / size_of::<u8>();
 
+    if addr.is_null() {
+        return false;
+    }
+
     // read data in the pipe
     let read_fd = MEM_VALIDATE_PIPE.read_fd.load(Ordering::SeqCst);
     let valid_read = loop {
